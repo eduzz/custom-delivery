@@ -1,37 +1,104 @@
-## Welcome to GitHub Pages
+## Entrega customizada Eduzz
 
-You can use the [editor on GitHub](https://github.com/eduzz/custom-delivery/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+A entrega customizada permite que você utilize qualquer serviço como plataforma de entrega de conteúdo na Eduzz, ou seja, quando um cliente comprar um produto, você receberá eventos em sua plataforma via requisições HTTP com os dados da venda, para que a liberação do conteúdo possa ser feita.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Consideramos como **sucesso** todas as requisições que retornam o **[status HTTP 200](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html)**.
 
-### Markdown
+As configurações para o cadastro de entrega customizada podem serem acessadas no **[Órbita](https://orbita.eduzz.com/producer/webhook)**, na aba "Avançado" nas configurações do seu produto, caso você já tenha alguma entrega customizada, basta clicar na opção desejada na listagem, ou, caso ainda não possua uma entrega customizada, clique em "Adicionar Entrega", então, o seguinte modal onde você pode escolher o tipo de entrega e informar qual a url que deverá receber os dados será exibido:
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+![Modal de cadastro de entrega customizada no Órbita](customizado_modal.png "Modal de cadastro de entrega customizada no Órbita")
 
-```markdown
-Syntax highlighted code block
+### Autenticação
 
-# Header 1
-## Header 2
-### Header 3
+Para autenticar uma entrega customizada, recomendamos o uso do campo chave de origem, disponível também no serviço de **[Webhook](https://github.eduzz.com/eduzz/wrbhook)**.
 
-- Bulleted
-- List
+A chave para integração pode ser visualizada em nossa plataforma no **[Órbita](https://orbita.eduzz.com/producer/config-api)**.
 
-1. Numbered
-2. List
+Será enviado no payload da entrega customizada no campo edz_cli_origin_secret.
 
-**Bold** and _Italic_ and `Code` text
+Ainda enviamos hoje o campo edz_cli_apikey por motivos de compatibilidade, porém, ele não deve mais ser utilizado e **será descontinuado em breve**.
 
-[Link](url) and ![Image](src)
+#### **sid** e **nsid**
+
+Para autenticação da entrega podem serem utilizados também os campos de autenticação dos dados de envio, para gerar o **sid**, basta seguir os passos abaixo:
+
+***Instale a biblioteca crypto:**
+
+```sh
+yarn add crypto
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+E então siga o seguinte snippet de código:
 
-### Jekyll Themes
+```js
+const fields = {...PAYLOAD_RECEBIDO_DA_EDUZZ};
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/eduzz/custom-delivery/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+const ksort = (obj) => {
+  let keys = Object.keys(obj).sort();
+  let sortedObj = {};
 
-### Support or Contact
+  for (let i in keys) {
+    sortedObj[keys[i]] = obj[keys[i]];
+  }
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+  return sortedObj;
+}
+
+const hash = Object.keys(ksort(fields)).reduce((acc, key) => acc + fields[key],'');
+
+const sid = crypto.createHash('md5')
+    .update(hash + fields.edz_cli_apikey)
+    .digest('hex');
+```
+
+Para a geração do nsid, você pode utilizar também a biblioteca crypto, porém, seguindo o snippet de código abaixo:
+
+```js
+const fields = {...PAYLOAD_RECEBIDO_DA_EDUZZ};
+
+const nsid = crypto.createHash('sha1')
+    .update(`${fields.edz_fat_cod}${fields.edz_cnt_cod}${fields.edz_cli_cod}`)
+    .digest('hex');
+```
+
+### Parâmetros
+
+Campo     | Descrição | Tipo
+------------- | ------------- | -----------------
+edz_fat_cod | Id da fatura que originou a entrega | int
+edz_fat_status | Status da fatura que originou a entrega | int
+edz_fat_dtcadastro | Data em que a fatura foi cadastrada na Eduzz | Date
+edz_cnt_cod | Id do produto que está sendo entregue | int
+edz_cnt_titulo | Nome do produto que está sendo entregue | string
+edz_cli_cod | Id do cliente | int
+edz_cli_cel | Número de celular do cliente | string
+edz_cli_cidade | Nome da cidade do cliente | string
+edz_cli_uf | Sigla do estado do cliente | string
+edz_cli_taxnumber | CPF/CNPJ do cliente | string
+edz_cli_rsocial | Nome completo do cliente | string
+edz_cli_email | Email do cliente | string
+~~edz_cli_apikey~~ | ~~Sua api key de produtor, esse campo será descontinuado e não deve ser utilizado para autenticação~~ | ~~string~~
+**edz_cli_origin_secret** | **Sua origin key de produtor, esse campo deve ser validado com o valor que é exibido no [Órbita](https://orbita.eduzz.com/producer/config-api)** | **string**
+**type** | **Operação de entrega ou remoção, quando você deve entregar, será enviado 'create', caso seja remoção de acesso (reembolso, atraso do contrato, etc) será enviado 'remove'** | **string**
+edz_produtor_email | O E-mail do produtor (Seu usuário) | string
+edz_produtor_cod | O Id do produtor (Seu usuário) | int
+
+### Tabela de status de faturas
+
+Campo: **trans_status**
+
+ID  | Status | Descrição
+--- | ------ | -----------
+1 | Aberta | Fatura aberta, cliente gerou boleto, mas ainda não foi compensado 
+3 | Paga | Compra foi paga, o cliente já esta apto a receber o produto 
+4 | Cancelada | Fatura Cancelada pela Eduzz
+6 | Aguardando Reembolso | Cliente solicitou reembolso, porem o mesmo ainda não foi efetuado
+7 | Reembolsado | Cliente já foi reembolsado pela eduzz
+9 | Duplicada | Cliente tentou comprar mais de uma vez o mesmo produto, a segunda fatura fica como duplicada e não é cobrada.
+10 | Expirada | A fatura que fica mais de 15 dias aberta é alterada para expirada.
+11 | Em Recuperacao | Fatura entrou para o processo de recuperação
+15 | Aguardando Pagamento | Faturas de recorrência após o vencimento ficam com o status aguardando pagamento
+
+### Suporte
+
+Precisa de uma informação que não está na lista acima? Entre em contato com nosso suporte (suporte@eduzz.com), setor comercial (comercial@eduzz.com) ou através dos nossos canais no **[Órbita](https://orbita.eduzz.com)**.
