@@ -7,7 +7,7 @@ Consideramos como **sucesso** todas as requisições que retornam o **[status HT
 
 As configurações para o cadastro de entrega customizada podem serem acessadas no **[Órbita](https://orbita.eduzz.com/producer/webhook)**, na aba "Avançado" nas configurações do seu produto, caso você já tenha alguma entrega customizada, basta clicar na opção desejada na listagem, ou, caso ainda não possua uma entrega customizada, clique em "Adicionar Entrega", então, o seguinte modal onde você pode escolher o tipo de entrega e informar qual a url que deverá receber os dados será exibido:
 
-![Modal de cadastro de entrega customizada no Órbita](customizado_modal.png "Modal de cadastro de entrega customizada no Órbita")
+![Modal de cadastro de entrega customizada no Órbita](https://github.com/eduzz/custom-delivery/raw/master/customizado_modal.png "Modal de cadastro de entrega customizada no Órbita")
 
 ### Autenticação
 
