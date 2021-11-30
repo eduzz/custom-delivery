@@ -71,6 +71,7 @@ edz_fat_cod | Id da fatura que originou a entrega | int
 edz_fat_status | Status da fatura que originou a entrega | int
 edz_fat_dtcadastro | Data em que a fatura foi cadastrada na Eduzz | Date
 edz_cnt_cod | Id do produto que está sendo entregue | int
+edz_cnt_paicod | Id do produto pai do produto que está sendo entregue. É nulo caso o produto não tenha um pai | int
 edz_cnt_titulo | Nome do produto que está sendo entregue | string
 edz_cli_cod | Id do cliente | int
 edz_cli_cel | Número de celular do cliente | string
