@@ -75,6 +75,8 @@ edz_cnt_paicod | Id do produto pai do produto que está sendo entregue. É nulo 
 edz_cnt_titulo | Nome do produto que está sendo entregue | string
 edz_cli_cod | Id do cliente | int
 edz_cli_cel | Número de celular do cliente | string
+edz_cli_cidade | Nome da cidade do cliente | string
+edz_cli_uf | Sigla do estado do cliente | string
 edz_cli_taxnumber | CPF/CNPJ do cliente | string
 edz_cli_rsocial | Nome completo do cliente | string
 edz_cli_email | Email do cliente | string
