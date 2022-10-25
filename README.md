@@ -71,9 +71,12 @@ edz_fat_cod | Id da fatura que originou a entrega | int
 edz_fat_status | Status da fatura que originou a entrega | int
 edz_fat_dtcadastro | Data em que a fatura foi cadastrada na Eduzz | Date
 edz_cnt_cod | Id do produto que está sendo entregue | int
+edz_cnt_paicod | Id do produto pai do produto que está sendo entregue. É nulo caso o produto não tenha um pai | int
 edz_cnt_titulo | Nome do produto que está sendo entregue | string
 edz_cli_cod | Id do cliente | int
 edz_cli_cel | Número de celular do cliente | string
+edz_cli_cidade | Nome da cidade do cliente | string
+edz_cli_uf | Sigla do estado do cliente | string
 edz_cli_taxnumber | CPF/CNPJ do cliente | string
 edz_cli_rsocial | Nome completo do cliente | string
 edz_cli_email | Email do cliente | string
@@ -83,7 +86,9 @@ edz_gtr_param2 | UTM Campaign | string
 edz_gtr_param3 | UTM Medium | string
 edz_gtr_param4 | UTM Content | string
 edz_produtor_email | O E-mail do produtor (Seu usuário) | string
+edz_produtor_cod | O Id do produtor (Seu usuário) | int
 **edz_cli_apikey** | **Sua apikey de produtor, caso você já tenha gerado a nova versão da sua apikey serão enviados apenas os 4 últimos dígitos, caso contrário, iremos enviar a apikey inteira. Este campo será descontinuado em breve e deve ser utilizado o edz_cli_origin_secret** | **string**
+**edz_cli_origin_secret** | **Sua origin key de produtor, esse campo deve ser validado com o valor que é exibido no [Órbita](https://orbita.eduzz.com/producer/config-api)** | **string**
 **type** | **Operação de entrega ou remoção, quando você deve entregar, será enviado 'create', caso seja remoção de acesso (reembolso, atraso do contrato, etc) será enviado 'remove'** | **string**
 
 
