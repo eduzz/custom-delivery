@@ -70,6 +70,8 @@ Campo     | Descrição | Tipo
 edz_fat_cod | Id da fatura que originou a entrega | int
 edz_fat_status | Status da fatura que originou a entrega | int
 edz_fat_dtcadastro | Data em que a fatura foi cadastrada na Eduzz | Date
+edz_order_bump_item | Informa se o produto é um order bump | boolean
+edz_gtr_dist | Id do afiliado caso houver | int
 edz_cnt_cod | Id do produto que está sendo entregue | int
 edz_cnt_paicod | Id do produto pai do produto que está sendo entregue. É nulo caso o produto não tenha um pai | int
 edz_cnt_titulo | Nome do produto que está sendo entregue | string
@@ -87,6 +89,9 @@ edz_gtr_param3 | UTM Medium | string
 edz_gtr_param4 | UTM Content | string
 edz_produtor_email | O E-mail do produtor (Seu usuário) | string
 edz_produtor_cod | O Id do produtor (Seu usuário) | int
+edz_con_cod | Codigo do contrato caso seja assinatura | int
+edz_con_status | Status do contrato | string
+edz_con_status_cod | ID do status do contrato  | int
 **edz_cli_apikey** | **Sua apikey de produtor, caso você já tenha gerado a nova versão da sua apikey serão enviados apenas os 4 últimos dígitos, caso contrário, iremos enviar a apikey inteira. Este campo será descontinuado em breve e deve ser utilizado o edz_cli_origin_secret** | **string**
 **edz_cli_origin_secret** | **Sua origin key de produtor, esse campo deve ser validado com o valor que é exibido no [Órbita](https://orbita.eduzz.com/producer/config-api)** | **string**
 **type** | **Operação de entrega ou remoção, quando você deve entregar, será enviado 'create', caso seja remoção de acesso (reembolso, atraso do contrato, etc) será enviado 'remove'** | **string**
@@ -103,10 +108,25 @@ ID  | Status | Descrição
 4 | Cancelada | Fatura Cancelada pela Eduzz
 6 | Aguardando Reembolso | Cliente solicitou reembolso, porem o mesmo ainda não foi efetuado
 7 | Reembolsado | Cliente já foi reembolsado pela eduzz
-9 | Duplicada | Cliente tentou comprar mais de uma vez o mesmo produto, a segunda fatura fica como duplicada e não é cobrada.
-10 | Expirada | A fatura que fica mais de 15 dias aberta é alterada para expirada.
+9 | Duplicada | Cliente tentou comprar mais de uma vez o mesmo produto, a segunda fatura fica como duplicada e não é cobrada
+10 | Expirada | A fatura que fica mais de 15 dias aberta é alterada para expirada
 11 | Em Recuperacao | Fatura entrou para o processo de recuperação
 15 | Aguardando Pagamento | Faturas de recorrência após o vencimento ficam com o status aguardando pagamento
+
+## Tabela de status de contratos
+
+Campos: **edz_con_status_cod,edz_con_status**
+
+ID  | Status | Descrição
+--- | ------ | -----------
+1 | Em dia | Contrato em dia
+2 | Aguardando pagamento | Contrato com fatura em aguardando pagamento 
+3 | Suspenso | Contrato suspenso
+4 | Cancelado | Contrato cancelado
+7 | Atrasado | Contrato atrasado
+9 | Finalizado | Contrato terminou
+10 | Trial | Contrato em período trial
+11 | Inadimplente | Contrato Inadimplente
 
 ### Suporte
 
