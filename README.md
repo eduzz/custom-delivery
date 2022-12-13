@@ -83,6 +83,7 @@ edz_cli_taxnumber | CPF/CNPJ do cliente | string
 edz_cli_rsocial | Nome completo do cliente | string
 edz_cli_email | Email do cliente | string
 edz_valorpago | Valor do Produto | float
+edz_trk_1      | Eduzz Tracker | String
 edz_gtr_param1 | UTM Source | string
 edz_gtr_param2 | UTM Campaign | string
 edz_gtr_param3 | UTM Medium | string
