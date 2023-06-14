@@ -1,25 +1,43 @@
-## Entrega customizada Eduzz 
+# Entrega customizada Eduzz 
 ---
 
 A entrega customizada permite que você utilize qualquer serviço como plataforma de entrega de conteúdo na Eduzz, ou seja, quando um cliente comprar um produto, você receberá eventos em sua plataforma via requisições HTTP com os dados da venda, para que a liberação do conteúdo possa ser feita.
 
-Consideramos como **sucesso** todas as requisições que retornam o **[status HTTP 200](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html)**.
+**Consideramos como sucesso todas as requisições que retornam o _[status HTTP 200](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html)_**.
 
 As configurações para o cadastro de entrega customizada podem serem acessadas no **[Órbita](https://orbita.eduzz.com/producer/webhook)**, na aba "Avançado" nas configurações do seu produto, caso você já tenha alguma entrega customizada, basta clicar na opção desejada na listagem, ou, caso ainda não possua uma entrega customizada, clique em "Adicionar Entrega", então, o seguinte modal onde você pode escolher o tipo de entrega e informar qual a url que deverá receber os dados será exibido:
 
 ![Modal de cadastro de entrega customizada no Órbita](https://github.com/eduzz/custom-delivery/raw/master/customizado_modal.png "Modal de cadastro de entrega customizada no Órbita")
 
-### Autenticação
+## Autenticação
 
 Para autenticar uma entrega customizada, recomendamos o uso do campo chave de origem, disponível também no serviço de **[Webhook](https://github.eduzz.com/eduzz/wrbhook)**.
 
-A chave para integração pode ser visualizada em nossa plataforma no **[Órbita](https://orbita.eduzz.com/producer/config-api)**.
+A chave para integração pode ser visualizada em nossa plataforma na **[tela de configuração de chaves de api no Órbita](https://orbita.eduzz.com/producer/config-api)**.
 
 Será enviado no payload da entrega customizada no campo edz_cli_origin_secret.
 
 Ainda enviamos hoje o campo edz_cli_apikey por motivos de compatibilidade, porém, ele não deve mais ser utilizado e **será descontinuado em breve**.
 
-#### **sid** e **nsid**
+### **origin_secret**
+
+Para validar através do origin_secret basta comparar o valor recebido com o que será informado na **[tela de configuração de chaves de api no Órbita](https://orbita.eduzz.com/producer/config-api)**.
+
+Segue exemplo abaixo:
+
+```js
+const { type, fields } = {...PAYLOAD_RECEBIDO_DA_EDUZZ};
+
+// Sua chave de autenticação de requisições fornecida no Órbita (origin)
+// https://orbita.eduzz.com/producer/config-api
+const ORIGIN_SECRET = 'chave-de-autenticacao-fornecida-no-orbita';
+
+const allow = type === 'create' && fields.edz_cli_origin_secret === ORIGIN_SECRET; // Deve permitir o acesso a plataforma
+```
+
+Dessa forma o usuário pode validar se as chaves são iguais, a origin_secret da conta do cliente é armazenada criptografada em nossos servidores então somente o cliente e as aplicações da Eduzz terão acesso a essa informação de forma programática.
+
+### **sid**, **nsid**
 
 Para autenticação da entrega podem serem utilizados também os campos de autenticação dos dados de envio, para gerar o **sid**, basta seguir os passos abaixo:
 
@@ -32,7 +50,7 @@ yarn add crypto
 E então siga o seguinte snippet de código:
 
 ```js
-const fields = {...PAYLOAD_RECEBIDO_DA_EDUZZ};
+const { type, sid, nsid, fields } = {...PAYLOAD_RECEBIDO_DA_EDUZZ};
 
 const ksort = (obj) => {
   let keys = Object.keys(obj).sort();
@@ -45,24 +63,25 @@ const ksort = (obj) => {
   return sortedObj;
 }
 
-const hash = Object.keys(ksort(fields)).reduce((acc, key) => acc + fields[key],'');
+const hash = Object.keys(ksort(fields)).reduce((acc, key) => `${acc}${fields[key]}`}, '');
 
-const sid = crypto.createHash('md5')
-    .update(hash + fields.edz_cli_apikey)
-    .digest('hex');
-```
+const generatedSid = crypto.createHash('md5')
+  .update(hash + fields.edz_cli_apikey)
+  .digest('hex');
 
-Para a geração do nsid, você pode utilizar também a biblioteca crypto, porém, seguindo o snippet de código abaixo:
-
-```js
-const fields = {...PAYLOAD_RECEBIDO_DA_EDUZZ};
-
-const nsid = crypto.createHash('sha1')
+const generatedNsid = crypto.createHash('sha1')
     .update(`${fields.edz_fat_cod}${fields.edz_cnt_cod}${fields.edz_cli_cod}`)
     .digest('hex');
+
+const sidOk = generatedSid === sid; // sid recebido é valido
+const nsidOk = generatedNsid === nsid; // nsid recebido é valido
+
+const allow = type === 'create' && sidOk && nsidOk; // Deve permitir o acesso a plataforma
 ```
 
-#### Parâmetros
+Utilizando os campos nsid e sid gerados você pode validar se a requisição é segura.
+
+## Parâmetros
 ---
 
 Campo     | Descrição | Tipo
@@ -130,6 +149,6 @@ ID  | Status | Descrição
 10 | Trial | Contrato em período trial
 11 | Inadimplente | Contrato Inadimplente
 
-### Suporte
+## Suporte
 
 Precisa de uma informação que não está na lista acima? Entre em contato com nosso suporte (suporte@eduzz.com), setor comercial (comercial@eduzz.com) ou através dos nossos canais no **[Órbita](https://orbita.eduzz.com)**.
