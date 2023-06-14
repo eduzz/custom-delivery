@@ -113,6 +113,7 @@ ID  | Status | Descrição
 10 | Expirada | A fatura que fica mais de 15 dias aberta é alterada para expirada
 11 | Em Recuperacao | Fatura entrou para o processo de recuperação
 15 | Aguardando Pagamento | Faturas de recorrência após o vencimento ficam com o status aguardando pagamento
+18 | Agendada | Fatura agendada pela recorrência para cobrar futuramente proximo a data de vencimento.
 
 ## Tabela de status de contratos
 
