@@ -102,7 +102,7 @@ edz_cli_taxnumber | CPF/CNPJ do cliente | string
 edz_cli_rsocial | Nome completo do cliente | string
 edz_cli_email | Email do cliente | string
 edz_valorpago | Valor do Produto | float
-edz_trk_1      | Eduzz Tracker | String
+edz_trk_1 | Eduzz Tracker | string
 edz_gtr_param1 | UTM Source | string
 edz_gtr_param2 | UTM Campaign | string
 edz_gtr_param3 | UTM Medium | string
@@ -111,7 +111,9 @@ edz_produtor_email | O E-mail do produtor (Seu usuário) | string
 edz_produtor_cod | O Id do produtor (Seu usuário) | int
 edz_con_cod | Codigo do contrato caso seja assinatura | int
 edz_con_status | Status do contrato | string
-edz_con_status_cod | ID do status do contrato  | int
+edz_con_status_cod | ID do status do contrato | int
+edz_con_dtend | Data de término do contrato. Vazio se o contrato for infinito. | string
+edz_con_is_infinite | O contrato é infinito? | boolean
 **edz_cli_apikey** | **Sua apikey de produtor, caso você já tenha gerado a nova versão da sua apikey serão enviados apenas os 4 últimos dígitos, caso contrário, iremos enviar a apikey inteira. Este campo será descontinuado em breve e deve ser utilizado o edz_cli_origin_secret** | **string**
 **edz_cli_origin_secret** | **Sua origin key de produtor, esse campo deve ser validado com o valor que é exibido no [Órbita](https://orbita.eduzz.com/producer/config-api)** | **string**
 **type** | **Operação de entrega ou remoção, quando você deve entregar, será enviado 'create', caso seja remoção de acesso (reembolso, atraso do contrato, etc) será enviado 'remove'** | **string**
