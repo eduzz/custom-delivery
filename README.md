@@ -119,7 +119,7 @@ edz_con_status_cod | ID do status do contrato  | int
 
 ## Tabela de status de faturas
 
-Campo: **trans_status**
+Campo: **edz_fat_status**
 
 ID  | Status | Descrição
 --- | ------ | -----------
@@ -136,7 +136,7 @@ ID  | Status | Descrição
 
 ## Tabela de status de contratos
 
-Campos: **edz_con_status_cod,edz_con_status**
+Campos: **edz_con_status_cod, edz_con_status**
 
 ID  | Status | Descrição
 --- | ------ | -----------
