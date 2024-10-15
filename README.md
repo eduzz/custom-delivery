@@ -1,4 +1,4 @@
-# Entrega customizada Eduzz 
+# Entrega customizada Eduzz
 ---
 
 A entrega customizada permite que você utilize qualquer serviço como plataforma de entrega de conteúdo na Eduzz, ou seja, quando um cliente comprar um produto, você receberá eventos em sua plataforma via requisições HTTP com os dados da venda, para que a liberação do conteúdo possa ser feita.
@@ -81,6 +81,10 @@ const allow = type === 'create' && sidOk && nsidOk; // Deve permitir o acesso a 
 
 Utilizando os campos nsid e sid gerados você pode validar se a requisição é segura.
 
+### **vendas com order bump (múltiplos itens)**
+Em casos de vendas com mais de um item, será enviado um item com o parâmetro **edz_order_bump_item = false**, sendo esse item o principal produto da venda.
+Os demais itens da fatura, estarão marcados com o parâmetro de order bump (**edz_order_bump_item = true**).
+
 ## Parâmetros
 ---
 
@@ -123,8 +127,8 @@ Campo: **trans_status**
 
 ID  | Status | Descrição
 --- | ------ | -----------
-1 | Aberta | Fatura aberta, cliente gerou boleto, mas ainda não foi compensado 
-3 | Paga | Compra foi paga, o cliente já esta apto a receber o produto 
+1 | Aberta | Fatura aberta, cliente gerou boleto, mas ainda não foi compensado
+3 | Paga | Compra foi paga, o cliente já esta apto a receber o produto
 4 | Cancelada | Fatura Cancelada pela Eduzz
 6 | Aguardando Reembolso | Cliente solicitou reembolso, porem o mesmo ainda não foi efetuado
 7 | Reembolsado | Cliente já foi reembolsado pela eduzz
@@ -141,7 +145,7 @@ Campos: **edz_con_status_cod,edz_con_status**
 ID  | Status | Descrição
 --- | ------ | -----------
 1 | Em dia | Contrato em dia
-2 | Aguardando pagamento | Contrato com fatura em aguardando pagamento 
+2 | Aguardando pagamento | Contrato com fatura em aguardando pagamento
 3 | Suspenso | Contrato suspenso
 4 | Cancelado | Contrato cancelado
 7 | Atrasado | Contrato atrasado
