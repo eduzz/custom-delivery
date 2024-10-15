@@ -84,6 +84,7 @@ Utilizando os campos nsid e sid gerados você pode validar se a requisição é 
 ### **vendas com order bump (múltiplos itens)**
 Em casos de vendas com mais de um item, será enviado um item com o parâmetro **edz_order_bump_item = false**, sendo esse item o principal produto da venda.
 Os demais itens da fatura, estarão marcados com o parâmetro de order bump (**edz_order_bump_item = true**).
+Nesse caso, em ambas entregas, será enviado o campo **edz_has_order_bump=true**.
 
 ## Parâmetros
 ---
@@ -93,7 +94,8 @@ Campo     | Descrição | Tipo
 edz_fat_cod | Id da fatura que originou a entrega | int
 edz_fat_status | Status da fatura que originou a entrega | int
 edz_fat_dtcadastro | Data em que a fatura foi cadastrada na Eduzz | Date
-edz_order_bump_item | Informa se o produto é um order bump | boolean
+edz_order_bump_item | Informa se o item que está sendo entregue é um order bump | boolean
+edz_has_order_bump | Informa se a venda (fatura) possui itens de order bump | boolean
 edz_gtr_dist | Id do afiliado caso houver | int
 edz_cnt_cod | Id do produto que está sendo entregue | int
 edz_cnt_paicod | Id do produto pai do produto que está sendo entregue. É nulo caso o produto não tenha um pai | int
